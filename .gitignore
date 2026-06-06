@@ -1,0 +1,9 @@
+_build/
+results/
+
+*.cmx
+*.cmi
+*.o
+
+.DS_Store
+*~
