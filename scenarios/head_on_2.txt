@@ -1,0 +1,3 @@
+name head_on_2
+uav 0 start 0 0 0 goal 20 0 0 type default level 0
+uav 1 start 20 0 0 goal 0 0 0 type default level 0

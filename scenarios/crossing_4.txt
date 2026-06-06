@@ -1,0 +1,5 @@
+name crossing_4
+uav 0 start -10 0 0 goal 10 0 0 type default level 0
+uav 1 start 10 0 0 goal -10 0 0 type default level 0
+uav 2 start 0 -10 0 goal 0 10 0 type default level 0
+uav 3 start 0 10 0 goal 0 -10 0 type default level 0
