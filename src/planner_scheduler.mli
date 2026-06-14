@@ -2,6 +2,11 @@
 
 type t
 
-val create : cfg:Types.sim_config -> n_uavs:int -> rng:Random_utils.t -> t
+type uav_timing = {
+  start_time : float;
+  period : float;
+}
+
+val create : cfg:Types.sim_config -> timings:uav_timing array -> t
 val due_uavs : t -> now:float -> int list
 val schedule_next : t -> uav_id:int -> now:float -> unit

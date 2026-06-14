@@ -6,6 +6,8 @@ type uav_spec = {
   goal : Vec3.t;
   uav_type : Types.uav_type_params;
   initial_level : int;
+  planner_start_time : float option;
+  planner_period : float option;
 }
 
 type t = {
@@ -32,30 +34,33 @@ let words line =
 
 let vec x y z = Vec3.{ x; y; z }
 
+let parse_optional_uav_fields tokens =
+  let rec loop start_time period = function
+    | [] -> (start_time, period)
+    | "planner_start" :: value :: rest ->
+        loop (Some (float_of_string value)) period rest
+    | "planner_period" :: value :: rest ->
+        loop start_time (Some (float_of_string value)) rest
+    | toks ->
+        invalid_arg ("bad optional uav fields: " ^ String.concat " " toks)
+  in
+  loop None None tokens
+
 let parse_uav tokens =
   match tokens with
-  | [
-   "uav";
-   id;
-   "start";
-   sx;
-   sy;
-   sz;
-   "goal";
-   gx;
-   gy;
-   gz;
-   "type";
-   _typ;
-   "level";
-   level;
-  ] ->
+  | "uav" :: id :: "start" :: sx :: sy :: sz :: "goal" :: gx :: gy :: gz
+    :: "type" :: _typ :: "level" :: level :: optional ->
+      let planner_start_time, planner_period =
+        parse_optional_uav_fields optional
+      in
       {
         id = int_of_string id;
         start = vec (float_of_string sx) (float_of_string sy) (float_of_string sz);
         goal = vec (float_of_string gx) (float_of_string gy) (float_of_string gz);
         uav_type = default_uav_type;
         initial_level = int_of_string level;
+        planner_start_time;
+        planner_period;
       }
   | _ -> invalid_arg ("bad uav line: " ^ String.concat " " tokens)
 
@@ -98,4 +103,23 @@ let to_initial_states ~bundle ~cfg scenario =
            stalled = false;
            uav_type = spec.uav_type;
          })
+  |> Array.of_list
+
+let planner_timings ~cfg ~rng scenario =
+  scenario.uavs
+  |> List.map (fun spec ->
+         let period =
+           match spec.planner_period with
+           | Some period -> period
+           | None ->
+               cfg.Types.planner_period
+               +. Random_utils.uniform rng (-.cfg.planner_jitter) cfg.planner_jitter
+         in
+         let period = max cfg.world_dt period in
+         let start_time =
+           match spec.planner_start_time with
+           | Some start_time -> max 0.0 start_time
+           | None -> Random_utils.uniform rng 0.0 period
+         in
+         Planner_scheduler.{ start_time; period })
   |> Array.of_list
