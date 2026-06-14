@@ -16,17 +16,18 @@ type t = {
 }
 
 let default_uav_type : Types.uav_type_params =
+  (* speed=10, radius=norme=80, climb_rate=layer_spacing/climb_step=160/5. *)
   {
     Types.type_name = "default";
-    vmax = 2.0;
+    vmax = 10.0;
     amax_xy = 3.0;
     az_up_max = 2.0;
     az_down_max = 2.0;
     jerk_max = 5.0;
     yaw_rate_max = 1.5;
     yaw_acc_max = 3.0;
-    climb_rate_max = 2.0;
-    radius = 0.5;
+    climb_rate_max = 32.0;
+    radius = 80.0;
   }
 
 let words line =

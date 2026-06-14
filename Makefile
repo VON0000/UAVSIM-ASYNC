@@ -16,6 +16,8 @@ SRC := \
   src/layered_airspace.ml \
   src/layered_conflict.ml \
   src/layered_motion.ml \
+  src/layered_orca.mli \
+  src/layered_orca.ml \
   src/layered_planner_adapter.ml \
   src/continuous3d_airspace.ml \
   src/continuous3d_conflict.ml \
@@ -52,6 +54,7 @@ $(BUILD)/src/event_queue.cmx: $(BUILD)/src/event_queue.cmi
 $(BUILD)/src/neighbor_cache.cmx: $(BUILD)/src/neighbor_cache.cmi
 $(BUILD)/src/comm_model.cmx: $(BUILD)/src/comm_model.cmi
 $(BUILD)/src/planner_scheduler.cmx: $(BUILD)/src/planner_scheduler.cmi
+$(BUILD)/src/layered_orca.cmx: $(BUILD)/src/layered_orca.cmi
 $(BUILD)/src/world.cmx: $(BUILD)/src/world.cmi
 $(BUILD)/src/logger.cmx: $(BUILD)/src/logger.cmi
 $(BUILD)/src/scenario.cmx: $(BUILD)/src/scenario.cmi
