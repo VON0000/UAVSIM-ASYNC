@@ -33,9 +33,6 @@ let make_msg t ~now (sender : Types.uav_state) (receiver : Types.uav_state) =
     receive_time = now +. delay;
     pos = sender.pos;
     vel = sender.vel;
-    acc = sender.acc;
-    yaw = sender.yaw;
-    mode_state = sender.mode_state;
     radius = sender.uav_type.radius;
   }
 

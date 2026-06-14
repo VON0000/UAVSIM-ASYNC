@@ -69,9 +69,6 @@ type neighbor_msg = {
   receive_time : float;
   pos : Vec3.t;
   vel : Vec3.t;
-  acc : Vec3.t;
-  yaw : float;
-  mode_state : mode_state;
   radius : float;
 }
 
@@ -79,9 +76,6 @@ type neighbor_observation = {
   id : int;
   pos : Vec3.t;
   vel : Vec3.t;
-  acc : Vec3.t;
-  yaw : float;
-  mode_state : mode_state;
   radius : float;
   effective_radius : float;
   age : float;

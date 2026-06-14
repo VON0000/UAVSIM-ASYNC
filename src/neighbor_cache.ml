@@ -19,9 +19,6 @@ let observation_of_msg ~now ~cfg msg =
     Types.id = msg.sender_id;
     pos;
     vel = msg.vel;
-    acc = msg.acc;
-    yaw = msg.yaw;
-    mode_state = msg.mode_state;
     radius = msg.radius;
     effective_radius = msg.radius +. (cfg.Types.k_delay_radius *. age);
     age;
