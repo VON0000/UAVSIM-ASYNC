@@ -150,20 +150,11 @@ def write_dashboard_gif(times, uav_ids, by_time, traces, out_path, fps, frame_dt
         xz_labels[uav_id] = xz_label
 
     title = fig.suptitle("")
-    status_text = fig.text(
-        0.5,
-        0.02,
-        "",
-        ha="center",
-        fontsize=10,
-        bbox={"facecolor": "white", "edgecolor": "#cccccc", "alpha": 0.85},
-    )
 
     def update(frame_index):
         t = times[frame_index]
         start_t = max(times[0], t - trail)
-        status_parts = []
-        artists = [title, status_text]
+        artists = [title]
         for uav_id in uav_ids:
             trace = [p for p in traces[uav_id] if start_t <= p["time"] <= t]
             if trace:
@@ -182,10 +173,6 @@ def write_dashboard_gif(times, uav_ids, by_time, traces, out_path, fps, frame_dt
             xz_markers[uav_id].set_offsets([[point["x"], point["z"]]])
             xz_labels[uav_id].set_position((point["x"], point["z"]))
             xz_labels[uav_id].set_text(f"  {uav_id}")
-            status = "reached" if point["reached"] else "active" if point["active"] else "inactive"
-            status_parts.append(
-                f"UAV {uav_id}: x={point['x']:.1f}, y={point['y']:.1f}, z={point['z']:.1f}, level={point['level']}, {status}"
-            )
             artists.extend([
                 xy_trails[uav_id],
                 xy_markers[uav_id],
@@ -195,7 +182,6 @@ def write_dashboard_gif(times, uav_ids, by_time, traces, out_path, fps, frame_dt
                 xz_labels[uav_id],
             ])
         title.set_text(f"UAV replay  t={t:.2f}s")
-        status_text.set_text(" | ".join(status_parts))
         return artists
 
     fig.tight_layout(rect=[0, 0.07, 1, 0.93])
