@@ -28,6 +28,25 @@ Each run writes:
 - `events.csv`
 - `summary.csv`
 
+Visualize one run as SVG:
+
+```sh
+python3 scripts/plot_metrics.py results/raw/test1
+```
+
+This writes `trajectory_xy.svg` and `altitude_z.svg` in the run directory.
+
+Create an animated replay:
+
+```sh
+python3 scripts/animate_run.py results/raw/test1
+```
+
+This writes `replay.gif` and `replay.html`. Open `replay.html` in a browser for
+an interactive full-run playback with a scrubber. `replay.gif` shows a
+synchronized top-down XY view and front XZ view; `replay_3d.gif` shows the same
+run in a 3D view.
+
 ## Scenario Format
 
 ```text
