@@ -107,7 +107,6 @@ type sim_config = {
   k_delay_radius : float;
   layer_spacing : float;
   layer_count : int;
-  climb_steps : int;
   safety_radius : float;
   random_seed : int;
   state_log_path : string;

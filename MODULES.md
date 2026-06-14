@@ -138,7 +138,6 @@
 - `stale_timeout = 2.0`
 - `layer_spacing = 5.0`
 - `layer_count = 5`
-- `climb_steps = 20`
 - `safety_radius = 1.5`
 
 ## 可替换模块接口
@@ -351,7 +350,7 @@ type mode_bundle = {
 换层逻辑：
 
 - 当前处于 `LevelStable` 且 `cmd.start_level_change = true` 且 `cmd.target_level = Some target` 时开始换层
-- 换层持续 `cfg.climb_steps`
+- 换层持续时间由层高差和 `uav_type.climb_rate_max` 推导，再按 `world_dt` 离散成运动步
 - 换层完成后进入 `LevelStable`，`current_level = target_level`
 
 ### `src/layered_planner_adapter.ml`

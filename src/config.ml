@@ -17,7 +17,6 @@ let default_config : sim_config =
     k_delay_radius = 0.1;
     layer_spacing = 5.0;
     layer_count = 5;
-    climb_steps = 20;
     safety_radius = 1.5;
     random_seed = 1;
     state_log_path = "results/raw/state.csv";

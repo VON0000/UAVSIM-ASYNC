@@ -7,13 +7,21 @@ let clamp_speed_xy vmax v =
   if n <= vmax || n <= 1e-9 then { v with Vec3.z = 0.0 }
   else { x = v.Vec3.x *. vmax /. n; y = v.y *. vmax /. n; z = 0.0 }
 
-let advance_transition cfg pos mode_state cmd =
+let transition_steps ~dt ~(uav_type : Types.uav_type_params) ~target_z ~current_z =
+  let distance = abs_float (target_z -. current_z) in
+  let climb_rate = max 1e-9 uav_type.climb_rate_max in
+  let step_dt = max 1e-9 dt in
+  max 1 (int_of_float (ceil ((distance /. climb_rate) /. step_dt)))
+
+let advance_transition cfg ~dt ~uav_type pos mode_state cmd =
   match mode_state with
   | Types.Layered ({ current_level; transition = Types.LevelStable } as ls) -> (
       match (cmd.Types.start_level_change, cmd.target_level) with
       | true, Some target when target <> current_level ->
           let target_z = Layered_airspace.z_of_level cfg target in
-          let steps_total = max 1 cfg.Types.climb_steps in
+          let steps_total =
+            transition_steps ~dt ~uav_type ~target_z ~current_z:pos.Vec3.z
+          in
           let next =
             Types.LevelChanging
               {
@@ -69,7 +77,10 @@ let step ~cfg ~dt ~cmd (s : Types.uav_state) =
   else
     let target_vel = clamp_speed_xy s.Types.uav_type.vmax cmd.Types.target_vel in
     let xy_pos = Vec3.add s.pos (Vec3.scale dt target_vel) in
-    let pos, mode_state = advance_transition cfg { xy_pos with z = s.pos.z } s.mode_state cmd in
+    let pos, mode_state =
+      advance_transition cfg ~dt ~uav_type:s.uav_type { xy_pos with z = s.pos.z }
+        s.mode_state cmd
+    in
     let next = { s with Types.pos; vel = target_vel; acc = Vec3.zero; mode_state } in
     let did_reach = reached ~cfg next in
     { next with reached = did_reach; active = not did_reach }
